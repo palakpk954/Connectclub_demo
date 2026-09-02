@@ -71,24 +71,76 @@ payMethods.forEach(m => {
   });
 });
 
-// Mock "Pay" submit
+// ===== Live Razorpay Checkout =====
 document.getElementById('payConfirmBtn').addEventListener('click', (e) => {
   e.preventDefault();
-  modalBody.style.display = 'none';
-  paySuccess.classList.add('active');
+  
+  // Extracting the price from the modal (removing the ₹ symbol for the calculation)
+  const priceText = modalEventPrice.textContent.replace('₹', '');
+  const amountInPaise = parseInt(priceText) * 100; 
+
+  const options = {
+    "key": "YOUR_TEST_KEY_HERE", // Replace with your Razorpay Test Key from your dashboard
+    "amount": amountInPaise, 
+    "currency": "INR",
+    "name": "Connect Club",
+    "description": modalEventName.textContent,
+    "theme": {
+        "color": "#C68A30" // Your brand's Golden Brown
+    },
+    "handler": function (response){
+        // Triggers when payment is successful
+        console.log("Payment ID: ", response.razorpay_payment_id);
+        modalBody.style.display = 'none';
+        paySuccess.classList.add('active');
+    }
+  };
+  
+  const rzp = new Razorpay(options);
+  rzp.open();
 });
 
-// ===== Contact form (demo) =====
+// ===== Live Contact Form Fetch =====
 const contactForm = document.getElementById('contactForm');
-contactForm.addEventListener('submit', (e) => {
+
+contactForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const btn = contactForm.querySelector('button[type="submit"]');
   const original = btn.textContent;
-  btn.textContent = 'Message sent';
+  
+  btn.textContent = 'Sending...';
   btn.disabled = true;
-  setTimeout(() => {
-    btn.textContent = original;
-    btn.disabled = false;
-    contactForm.reset();
-  }, 2400);
+
+  // Gather the data from the form
+  const payload = {
+    name: document.getElementById('fname').value,
+    email: document.getElementById('femail').value,
+    reason: document.getElementById('freason').value,
+    message: document.getElementById('fmsg').value
+  };
+
+  try {
+    // Replace this URL with your actual endpoint (e.g., AWS API Gateway / Lambda / Formspree)
+    const response = await fetch('https://your-api-endpoint.execute-api.region.amazonaws.com/prod/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      btn.textContent = 'Message sent';
+      contactForm.reset();
+    } else {
+      btn.textContent = 'Failed to send';
+    }
+  } catch (error) {
+    console.error('Submission error:', error);
+    btn.textContent = 'Error. Try again.';
+  } finally {
+    // Reset the button text and state after 3 seconds
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.disabled = false;
+    }, 3000);
+  }
 });
