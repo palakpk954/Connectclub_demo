@@ -2,12 +2,12 @@
    CONNECT CLUB — Design Tokens
    ============================================ */
 :root {
-  /* Color */
-  --charcoal-base: #1c1a17;
-  --charcoal-surface: #262320;
-  --charcoal-surface-2: #322e29;
-  --charcoal-line: #423d36;
-  --gold: #c68a30;
+  /* Brand Guide exact values */
+  --charcoal-base: #282826;       
+  --charcoal-surface: #1f1f1d;
+  --charcoal-surface-2: #343431;
+  --charcoal-line: #454541;
+  --gold: #c68a30;                
   --gold-light: #e3b368;
   --gold-dim: #8a651f;
   --cream: #f4efe4;
@@ -87,7 +87,7 @@ p { margin: 0; }
   align-items: center;
   justify-content: space-between;
   padding: 20px var(--edge);
-  background: rgba(28, 26, 23, 0.72);
+  background: rgba(40, 40, 38, 0.72);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid transparent;
@@ -96,7 +96,7 @@ p { margin: 0; }
 
 .nav.scrolled {
   border-bottom-color: var(--charcoal-line);
-  background: rgba(28, 26, 23, 0.92);
+  background: rgba(40, 40, 38, 0.92);
 }
 
 .nav-logo {
@@ -549,10 +549,16 @@ p { margin: 0; }
   gap: 24px;
 }
 .video-card {
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 12px;
+  overflow: hidden; 
   background: var(--charcoal-surface-2);
   border: 1px solid var(--charcoal-line);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.video-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(198, 138, 48, 0.12);
+  border-color: var(--gold-dim);
 }
 .video-thumb {
   aspect-ratio: 16/9;
@@ -560,12 +566,12 @@ p { margin: 0; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--charcoal-surface-2), var(--charcoal-base));
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.5s ease;
 }
-.video-thumb::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(circle at 30% 30%, rgba(198,138,48,0.22), transparent 60%);
+.video-card:hover .video-thumb {
+  transform: scale(1.05);
 }
 .play-ring {
   width: 52px; height: 52px;
@@ -576,8 +582,25 @@ p { margin: 0; }
   justify-content: center;
   position: relative;
   z-index: 1;
+  background: rgba(40, 40, 38, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: background 0.3s ease, transform 0.3s ease;
 }
-.video-card .info { padding: 16px 18px 20px; }
+.video-card:hover .play-ring, 
+.reel-card:hover .play-ring {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--charcoal-base);
+  transform: scale(1.1);
+}
+.reel-card .play-ring {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 42px; height: 42px; 
+}
+.reel-card:hover .play-ring {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+.video-card .info { padding: 16px 18px 20px; position: relative; z-index: 2; background: var(--charcoal-surface-2); }
 .video-card h4 { color: var(--cream); font-size: 0.95rem; margin-bottom: 4px; }
 .video-card p { color: var(--stone-dim); font-size: 0.8rem; }
 
@@ -593,25 +616,19 @@ p { margin: 0; }
   flex: 0 0 200px;
   aspect-ratio: 9/16;
   border-radius: 10px;
-  background: linear-gradient(160deg, var(--charcoal-surface-2), var(--charcoal-base));
   position: relative;
   overflow: hidden;
   border: 1px solid var(--charcoal-line);
   display: flex;
   align-items: flex-end;
   padding: 14px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.reel-card::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(circle at 70% 20%, rgba(198,138,48,0.2), transparent 55%);
-}
-.reel-card .play-ring { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 42px; height: 42px; }
 .reel-tag {
   position: relative; z-index: 1;
   font-size: 0.78rem;
   color: var(--cream);
-  background: rgba(28,26,23,0.6);
+  background: rgba(40, 40, 38, 0.8);
   padding: 5px 10px;
   border-radius: 20px;
 }
@@ -634,6 +651,13 @@ p { margin: 0; }
   padding: 40px;
   display: flex;
   flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.case-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(198, 138, 48, 0.08);
+  border-color: var(--charcoal-line);
 }
 
 .case-label {
@@ -977,14 +1001,7 @@ p { margin: 0; }
     background: var(--charcoal-base);
     border-bottom: 1px solid var(--charcoal-line);
     padding: 24px var(--edge) 32px;
-    gap: 18px;
-  }
-  .nav.mobile-open .nav-cta {
-    display: inline-flex;
-    position: absolute;
-    top: 100%;
-    margin-top: 220px;
-    left: var(--edge);
+    gap: 20px;
   }
   .hero { padding-top: 132px; }
   .section { padding: 72px var(--edge); }
